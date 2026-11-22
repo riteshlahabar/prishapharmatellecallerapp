@@ -1,0 +1,357 @@
+{
+  "success": true,
+  "message": "Call history loaded.",
+  "data": [
+    {
+      "id": 81,
+      "status": "callback",
+      "status_label": "Call back",
+      "notes": "Asked to be rung back after the weekend.",
+      "called_at": "2026-11-22T08:04:00+00:00",
+      "follow_up_at": "2026-11-24T08:04:00+00:00",
+      "follow_up_done_at": null,
+      "follow_up_open": true,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 80,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": null,
+      "called_at": "2026-11-22T07:34:29+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 79,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": "phase6 smoke",
+      "called_at": "2026-11-22T07:34:29+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 78,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": null,
+      "called_at": "2026-11-22T06:57:23+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 77,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": "phase6 smoke",
+      "called_at": "2026-11-22T06:57:23+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 76,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": null,
+      "called_at": "2026-11-22T06:53:11+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 75,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": "phase6 smoke",
+      "called_at": "2026-11-22T06:53:11+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 74,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": null,
+      "called_at": "2026-11-22T06:36:33+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 73,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": "phase6 smoke",
+      "called_at": "2026-11-22T06:36:33+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 72,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": null,
+      "called_at": "2026-11-22T06:34:42+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 71,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": "phase6 smoke",
+      "called_at": "2026-11-22T06:34:42+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 70,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": null,
+      "called_at": "2026-11-22T06:34:22+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 69,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": "phase6 smoke",
+      "called_at": "2026-11-22T06:34:22+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 68,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": null,
+      "called_at": "2026-11-22T06:23:51+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 67,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": "phase6 smoke",
+      "called_at": "2026-11-22T06:23:51+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 66,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": null,
+      "called_at": "2026-11-22T06:23:41+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 65,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": "phase6 smoke",
+      "called_at": "2026-11-22T06:23:41+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 2,
+      "status": "callback",
+      "status_label": "Call back",
+      "notes": "Busy, call after clinic hours.",
+      "called_at": "2026-11-22T04:44:54+00:00",
+      "follow_up_at": "2026-11-22T06:44:54+00:00",
+      "follow_up_done_at": "2026-11-22T06:23:41+00:00",
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    },
+    {
+      "id": 1,
+      "status": "interested",
+      "status_label": "Interested",
+      "notes": "own",
+      "called_at": "2026-11-22T04:44:54+00:00",
+      "follow_up_at": null,
+      "follow_up_done_at": null,
+      "follow_up_open": false,
+      "follow_up_due": false,
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011",
+        "city": null
+      }
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "last_page": 1,
+    "per_page": 20,
+    "total": 19,
+    "from": 1,
+    "to": 19,
+    "has_more": false
+  }
+}

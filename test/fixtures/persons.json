@@ -1,0 +1,43 @@
+{
+  "success": true,
+  "message": "Persons loaded.",
+  "data": [
+    {
+      "id": 1,
+      "name": "Dr Phase3",
+      "type": "doctor",
+      "type_label": "Doctor",
+      "mobile": "9300000011",
+      "email": null,
+      "address": null,
+      "city": null,
+      "specialization": null,
+      "is_active": true,
+      "region": {
+        "id": 1,
+        "name": "Phase3 Region",
+        "code": "P3R"
+      },
+      "last_call": {
+        "id": 81,
+        "status": "callback",
+        "status_label": "Call back",
+        "notes": "Asked to be rung back after the weekend.",
+        "called_at": "2026-11-22T08:04:00+00:00",
+        "follow_up_at": "2026-11-24T08:04:00+00:00",
+        "follow_up_done_at": null,
+        "follow_up_open": true,
+        "follow_up_due": false
+      }
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "last_page": 1,
+    "per_page": 20,
+    "total": 1,
+    "from": 1,
+    "to": 1,
+    "has_more": false
+  }
+}

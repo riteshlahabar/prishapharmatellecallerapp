@@ -1,0 +1,85 @@
+{
+  "success": true,
+  "message": "Sent messages loaded.",
+  "data": [
+    {
+      "id": 18,
+      "subject": "Dr Phase3 wants a sample",
+      "body": "Spoke to the doctor this morning. They asked for a sample pack of the new line on your next round.",
+      "is_read": true,
+      "read_at": "2026-11-22T07:34:27+00:00",
+      "sent_at": "2026-11-22T07:19:51+00:00",
+      "from": {
+        "id": 4,
+        "name": "P3 TC",
+        "role": "telecaller"
+      },
+      "to": {
+        "id": 3,
+        "name": "P3 MR Two",
+        "role": "mr"
+      },
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011"
+      },
+      "call_log_id": null
+    },
+    {
+      "id": 1,
+      "subject": "Dr Phase3 wants a visit",
+      "body": "Spoke to them this morning. They asked for the new range brochure and would like a call in person this week.",
+      "is_read": true,
+      "read_at": "2026-11-22T06:21:49+00:00",
+      "sent_at": "2026-11-22T05:00:27+00:00",
+      "from": {
+        "id": 4,
+        "name": "P3 TC",
+        "role": "telecaller"
+      },
+      "to": {
+        "id": 2,
+        "name": "P3 MR",
+        "role": "mr"
+      },
+      "person": {
+        "id": 1,
+        "name": "Dr Phase3",
+        "type": "doctor",
+        "mobile": "9300000011"
+      },
+      "call_log_id": 1
+    },
+    {
+      "id": 2,
+      "subject": "Clinic timings changed",
+      "body": "Afternoon slots only from next week.",
+      "is_read": false,
+      "read_at": null,
+      "sent_at": "2026-11-22T05:00:27+00:00",
+      "from": {
+        "id": 4,
+        "name": "P3 TC",
+        "role": "telecaller"
+      },
+      "to": {
+        "id": 2,
+        "name": "P3 MR",
+        "role": "mr"
+      },
+      "person": null,
+      "call_log_id": null
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "last_page": 1,
+    "per_page": 20,
+    "total": 3,
+    "from": 1,
+    "to": 3,
+    "has_more": false
+  }
+}

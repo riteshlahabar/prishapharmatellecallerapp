@@ -1,0 +1,10 @@
+{
+  "success": false,
+  "message": "The follow-up date has to be in the future.",
+  "errors": {
+    "reason": "validation",
+    "follow_up_at": [
+      "The follow-up date has to be in the future."
+    ]
+  }
+}

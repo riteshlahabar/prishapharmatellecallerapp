@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "message": "Profile loaded.",
+  "data": {
+    "id": 4,
+    "name": "P3 TC",
+    "email": "p3.tc@x.local",
+    "mobile": "9300000002",
+    "role": "telecaller",
+    "role_label": "Telecaller",
+    "is_active": true,
+    "region_id": null,
+    "regions": [
+      {
+        "id": 1,
+        "name": "Phase3 Region",
+        "code": "P3R"
+      }
+    ],
+    "permissions": [
+      "dashboard.view",
+      "persons.view",
+      "calls.view",
+      "calls.create",
+      "calls.update",
+      "messages.view",
+      "messages.create"
+    ]
+  }
+}

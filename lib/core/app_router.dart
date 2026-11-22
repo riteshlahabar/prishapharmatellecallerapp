@@ -1,32 +1,33 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../modules/auth/login_screen.dart';
-import '../modules/dashboard/screens/dashboard_screen.dart';
-import '../modules/customers/screens/customer_list_screen.dart';
-import '../modules/call_logs/screens/call_log_list_screen.dart';
-import '../modules/call_logs/screens/call_log_create_screen.dart';
-import '../modules/call_schedules/screens/call_schedule_list_screen.dart';
-import '../modules/call_schedules/screens/call_schedule_create_screen.dart';
-import '../modules/reports/screens/reports_screen.dart';
-import '../modules/profile/screens/profile_screen.dart';
-import 'providers.dart';
+import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
+import '../features/auth/state/auth_controller.dart';
+import '../features/auth/ui/login_screen.dart';
+import '../features/calls/ui/follow_ups_screen.dart';
+import '../features/calls/ui/history_screen.dart';
+import '../features/messages/ui/sent_screen.dart';
+import '../features/persons/ui/queue_screen.dart';
+import '../features/profile/ui/profile_screen.dart';
+import '../features/shell/ui/app_shell.dart';
 
+final _rootKey = GlobalKey<NavigatorState>();
+
+/// Routes, with one redirect: no token means login, and a token means
+/// anywhere but login. The redirect reads a synchronous provider rather than
+/// hitting disk, so it cannot flicker.
 final routerProvider = Provider<GoRouter>((ref) {
-  final auth = ref.watch(authServiceProvider);
-
   return GoRouter(
-    navigatorKey: _rootNavigatorKey,
-    initialLocation: '/login',
-    redirect: (context, state) async {
-      final isLoggedIn = auth.value?.isLoggedIn ?? false;
-      final isLoginRoute = state.matchedLocation == '/login';
+    navigatorKey: _rootKey,
+    initialLocation: '/',
+    refreshListenable: _AuthListenable(ref),
+    redirect: (context, state) {
+      final signedIn = ref.read(isSignedInProvider);
+      final atLogin = state.matchedLocation == '/login';
 
-      if (!isLoggedIn && !isLoginRoute) return '/login';
-      if (isLoggedIn && isLoginRoute) return '/dashboard';
+      if (!signedIn) return atLogin ? null : '/login';
+      if (atLogin) return '/';
+
       return null;
     },
     routes: [
@@ -34,89 +35,57 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/login',
         builder: (context, state) => const LoginScreen(),
       ),
-      ShellRoute(
-        navigatorKey: _shellNavigatorKey,
-        builder: (context, state, child) => DashboardShell(child: child),
-        routes: [
-          GoRoute(
-            path: '/dashboard',
-            builder: (context, state) => const DashboardScreen(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            AppShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/',
+                builder: (context, state) => const QueueScreen(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: '/customers',
-            builder: (context, state) => const CustomerListScreen(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/follow-ups',
+                builder: (context, state) => const FollowUpsScreen(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: '/call-logs',
-            builder: (context, state) => const CallLogListScreen(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/history',
+                builder: (context, state) => const HistoryScreen(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: '/call-logs/create',
-            builder: (context, state) => const CallLogCreateScreen(),
-          ),
-          GoRoute(
-            path: '/call-schedules',
-            builder: (context, state) => const CallScheduleListScreen(),
-          ),
-          GoRoute(
-            path: '/call-schedules/create',
-            builder: (context, state) => const CallScheduleCreateScreen(),
-          ),
-          GoRoute(
-            path: '/reports',
-            builder: (context, state) => const ReportsScreen(),
-          ),
-          GoRoute(
-            path: '/profile',
-            builder: (context, state) => const ProfileScreen(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/sent',
+                builder: (context, state) => const SentScreen(),
+              ),
+            ],
           ),
         ],
+      ),
+      // Outside the shell: full screen over the tabs.
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
       ),
     ],
   );
 });
 
-class DashboardShell extends StatelessWidget {
-  final Widget child;
-  const DashboardShell({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex(context),
-        onTap: (index) => _onTap(context, index),
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Dashboard'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Customers'),
-          BottomNavigationBarItem(icon: Icon(Icons.phone), label: 'Call Logs'),
-          BottomNavigationBarItem(icon: Icon(Icons.schedule), label: 'Schedules'),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Reports'),
-        ],
-      ),
-    );
-  }
-
-  int _currentIndex(BuildContext context) {
-    final location = GoRouterState.of(context).matchedLocation;
-    if (location.startsWith('/customers')) return 1;
-    if (location.startsWith('/call-logs')) return 2;
-    if (location.startsWith('/call-schedules')) return 3;
-    if (location.startsWith('/reports')) return 4;
-    return 0;
-  }
-
-  void _onTap(BuildContext context, int index) {
-    switch (index) {
-      case 0: context.go('/dashboard');
-      case 1: context.go('/customers');
-      case 2: context.go('/call-logs');
-      case 3: context.go('/call-schedules');
-      case 4: context.go('/reports');
-    }
+/// Bridges Riverpod to GoRouter's `refreshListenable`.
+class _AuthListenable extends ChangeNotifier {
+  _AuthListenable(Ref ref) {
+    ref.listen(isSignedInProvider, (_, _) => notifyListeners());
   }
 }

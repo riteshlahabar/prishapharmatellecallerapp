@@ -1,0 +1,10 @@
+{
+  "success": false,
+  "message": "A call-back needs a date to come back on.",
+  "errors": {
+    "reason": "validation",
+    "follow_up_at": [
+      "A call-back needs a date to come back on."
+    ]
+  }
+}

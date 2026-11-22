@@ -1,30 +1,45 @@
 name: telecaller_app
-description: "Prisha Pharma - Telecaller Mobile App"
+description: "Prisha Pharma — Telecaller app."
 publish_to: 'none'
+
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.12.2
+  # material_ui 1.11.x needs ^3.13.0; the toolchain here is Dart 3.14.
+  sdk: ^3.13.0
 
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  flutter_riverpod: ^2.61.0
-  riverpod_annotation: ^2.6.1
-  dio: ^5.8.0+1
-  go_router: ^14.8.0
-  shared_preferences: ^2.5.3
-  intl: ^0.20.2
-  flutter_slidable: ^4.0.0
-  table_calendar: ^3.2.0
+
+  cupertino_icons: ^2.0.0
+
+  # Material moved out of the SDK: package:flutter/material.dart is
+  # deprecated after Flutter v3.47.0-0.0.pre in favour of this package, which
+  # defines its own TextTheme/ThemeData — NOT re-exports of the SDK's. Mixing
+  # the two gives "TextTheme can't be assigned to TextTheme". So everything
+  # in lib/ imports material_ui, and every UI dependency below is on a
+  # version that has already migrated. Do not downgrade one without checking.
+  material_ui: ^1.11.1
+
+  # Riverpod, as in the MR app — the ProKit design ships MobX, and we take
+  # that kit's look, not its state layer.
+  flutter_riverpod: ^3.5.0
+
+  go_router: ^18.1.4
+  dio: ^5.11.1
+  shared_preferences: ^2.5.6
+  google_fonts: ^9.0.0
+  intl: ^0.20.3
+
+  # A telecaller's queue is only a queue if a row can be dialled.
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
   flutter_lints: ^6.0.0
-  riverpod_generator: ^2.6.4
-  build_runner: ^2.4.15
 
 flutter:
   uses-material-design: true

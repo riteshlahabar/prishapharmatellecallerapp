@@ -1,0 +1,10 @@
+{
+  "success": false,
+  "message": "Only a call-back carries a follow-up date.",
+  "errors": {
+    "reason": "validation",
+    "follow_up_at": [
+      "Only a call-back carries a follow-up date."
+    ]
+  }
+}

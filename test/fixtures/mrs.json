@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "message": "Recipients loaded.",
+  "data": [
+    {
+      "id": 2,
+      "name": "P3 MR",
+      "mobile": "9300000001",
+      "region": {
+        "id": 1,
+        "name": "Phase3 Region",
+        "code": "P3R"
+      }
+    },
+    {
+      "id": 3,
+      "name": "P3 MR Two",
+      "mobile": "9300000003",
+      "region": {
+        "id": 1,
+        "name": "Phase3 Region",
+        "code": "P3R"
+      }
+    }
+  ]
+}
