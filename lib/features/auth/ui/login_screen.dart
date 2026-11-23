@@ -40,10 +40,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     try {
-      await ref.read(authControllerProvider.notifier).signIn(
-            email: _email.text,
-            password: _password.text,
-          );
+      await ref
+          .read(authControllerProvider.notifier)
+          .signIn(email: _email.text, password: _password.text);
       // The router's redirect takes it from here.
     } on ApiFailure catch (failure) {
       setState(() {
@@ -67,101 +66,124 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final ended = ref.watch(sessionEndedProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Centred, or the Column's `stretch` would pull this
-                    // badge across the full width of the form.
-                    Center(
-                      child: Container(
-                        height: 72,
-                        width: 72,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: AppTheme.primary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Icon(Icons.headset_mic_outlined,
-                            color: Colors.white, size: 34),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      AppConstants.appName,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 4),
-                    const Text(
-                      'Sign in to work your queue',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: AppTheme.textSecondary),
-                    ),
-                    const SizedBox(height: 28),
-                    if (ended != null) _banner(ended, AppTheme.warning),
-                    if (_error != null) _banner(_error!, AppTheme.danger),
-                    TextFormField(
-                      controller: _email,
-                      keyboardType: TextInputType.emailAddress,
-                      autocorrect: false,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.mail_outline),
-                      ),
-                      validator: (value) =>
-                          (value ?? '').trim().isEmpty ? 'Enter your email' : null,
-                    ),
-                    const SizedBox(height: 14),
-                    TextFormField(
-                      controller: _password,
-                      obscureText: _obscure,
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) => _busy ? null : _submit(),
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: const Icon(Icons.lock_outline),
-                        suffixIcon: IconButton(
-                          onPressed: () => setState(() => _obscure = !_obscure),
-                          icon: Icon(_obscure
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined),
-                        ),
-                      ),
-                      validator: (value) =>
-                          (value ?? '').isEmpty ? 'Enter your password' : null,
-                    ),
-                    const SizedBox(height: 24),
-                    FilledButton(
-                      onPressed: _busy ? null : _submit,
-                      child: _busy
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
+      // A pale brand wash behind the card, so the login screen is already
+      // Prisha before the caller types anything.
+      body: DecoratedBox(
+        decoration: const BoxDecoration(gradient: AppTheme.brandGradient),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Centred, or the Column's `stretch` would pull the
+                      // logo across the full width of the form.
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 22,
+                            vertical: 18,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: AppTheme.shadow,
+                                blurRadius: 20,
+                                offset: Offset(0, 8),
                               ),
-                            )
-                          : const Text('Sign in'),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Accounts are created by your administrator.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 12),
-                    ),
-                  ],
+                            ],
+                          ),
+                          child: Image.asset(
+                            'assets/images/logo.png',
+                            width: 200,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 22),
+                      Text(
+                        AppConstants.appName,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.titleLarge
+                            ?.copyWith(color: AppTheme.tealDark),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text(
+                        'Sign in to work your queue',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: AppTheme.textSecondary),
+                      ),
+                      const SizedBox(height: 28),
+                      if (ended != null) _banner(ended, AppTheme.warning),
+                      if (_error != null) _banner(_error!, AppTheme.danger),
+                      TextFormField(
+                        controller: _email,
+                        keyboardType: TextInputType.emailAddress,
+                        autocorrect: false,
+                        textInputAction: TextInputAction.next,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: Icon(Icons.mail_outline),
+                        ),
+                        validator: (value) => (value ?? '').trim().isEmpty
+                            ? 'Enter your email'
+                            : null,
+                      ),
+                      const SizedBox(height: 14),
+                      TextFormField(
+                        controller: _password,
+                        obscureText: _obscure,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _busy ? null : _submit(),
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            onPressed: () =>
+                                setState(() => _obscure = !_obscure),
+                            icon: Icon(
+                              _obscure
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
+                            ),
+                          ),
+                        ),
+                        validator: (value) => (value ?? '').isEmpty
+                            ? 'Enter your password'
+                            : null,
+                      ),
+                      const SizedBox(height: 24),
+                      FilledButton(
+                        onPressed: _busy ? null : _submit,
+                        child: _busy
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('Sign in'),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Accounts are created by your administrator.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppTheme.textSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -172,19 +194,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _banner(String message, Color colour) => Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: colour.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: colour.withValues(alpha: 0.35)),
+    margin: const EdgeInsets.only(bottom: 16),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: colour.withValues(alpha: 0.10),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: colour.withValues(alpha: 0.35)),
+    ),
+    child: Row(
+      children: [
+        Icon(Icons.info_outline, size: 18, color: colour),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(message, style: TextStyle(color: colour)),
         ),
-        child: Row(
-          children: [
-            Icon(Icons.info_outline, size: 18, color: colour),
-            const SizedBox(width: 8),
-            Expanded(child: Text(message, style: TextStyle(color: colour))),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 }

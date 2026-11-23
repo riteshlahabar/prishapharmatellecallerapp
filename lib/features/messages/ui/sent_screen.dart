@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../core/app_theme.dart';
 import '../../../core/widgets/app_feedback.dart';
+import '../../../core/widgets/brand.dart';
 import '../domain/sent_message.dart';
 import '../state/messages_controller.dart';
 import 'send_message_sheet.dart';
@@ -17,7 +18,10 @@ class SentScreen extends ConsumerWidget {
     final sent = ref.watch(sentMessagesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sent')),
+      appBar: const BrandAppBar(
+        title: 'Sent',
+        subtitle: 'Notes you have passed to a rep',
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showSendMessageSheet(context),
         icon: const Icon(Icons.edit),
@@ -32,8 +36,7 @@ class SentScreen extends ConsumerWidget {
               SizedBox(height: MediaQuery.sizeOf(context).height * 0.25),
               ErrorPanel(
                 error: error,
-                onRetry: () =>
-                    ref.read(sentMessagesProvider.notifier).reload(),
+                onRetry: () => ref.read(sentMessagesProvider.notifier).reload(),
               ),
             ],
           ),
@@ -80,6 +83,14 @@ class _SentTile extends StatelessWidget {
           children: [
             Row(
               children: [
+                IconPad(
+                  icon: message.isRead
+                      ? Icons.mark_email_read_outlined
+                      : Icons.outgoing_mail,
+                  colour: message.isRead ? AppTheme.success : AppTheme.tileBlue,
+                  size: 38,
+                ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     message.subject,
@@ -90,10 +101,9 @@ class _SentTile extends StatelessWidget {
                 ),
                 // Read state belongs to the recipient; this is the one
                 // thing the sender wants to know after the fact.
-                Icon(
-                  message.isRead ? Icons.done_all : Icons.done,
-                  size: 18,
-                  color: message.isRead
+                StatusChip(
+                  label: message.isRead ? 'Read' : 'Sent',
+                  colour: message.isRead
                       ? AppTheme.success
                       : AppTheme.textSecondary,
                 ),
@@ -105,7 +115,9 @@ class _SentTile extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                  color: AppTheme.textSecondary, fontSize: 13),
+                color: AppTheme.textSecondary,
+                fontSize: 13,
+              ),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -113,19 +125,29 @@ class _SentTile extends StatelessWidget {
               runSpacing: 2,
               children: [
                 if (message.toName != null)
-                  Text('to ${message.toName}',
-                      style: const TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 11)),
+                  Text(
+                    'to ${message.toName}',
+                    style: const TextStyle(
+                      color: AppTheme.textSecondary,
+                      fontSize: 11,
+                    ),
+                  ),
                 if (message.personName != null)
-                  Text('re: ${message.personName}',
-                      style: const TextStyle(
-                          color: AppTheme.textSecondary, fontSize: 11)),
+                  Text(
+                    're: ${message.personName}',
+                    style: const TextStyle(
+                      color: AppTheme.textSecondary,
+                      fontSize: 11,
+                    ),
+                  ),
                 if (message.sentAt != null)
                   Text(
                     DateFormat('d MMM, h:mm a')
                         .format(message.sentAt!.toLocal()),
                     style: const TextStyle(
-                        color: AppTheme.textSecondary, fontSize: 11),
+                      color: AppTheme.textSecondary,
+                      fontSize: 11,
+                    ),
                   ),
                 Text(
                   message.isRead ? 'read' : 'unread',

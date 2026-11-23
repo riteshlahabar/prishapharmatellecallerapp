@@ -57,10 +57,22 @@ Each feature is `domain/` (models), `data/` (repository), `state/` (Riverpod),
 
 ## Design
 
-Same ProKit palette (`#1157FA`) and components as the MR app — the two are one
-product. `test/golden/*.png` are rendered screens for review; they substitute
-Roboto for Poppins because google_fonts cannot fetch a typeface offline in a
-test.
+The same theme and components as the MR app — the two are one product. The
+Prisha colours (teal `#00797C`, green `#6EAE40`) are in
+`lib/core/app_theme.dart`, pale on large surfaces and full strength on
+icons, figures and accents; `lib/core/widgets/brand.dart` holds
+`BrandAppBar`, `BrandHeader`, `StatCard`, `IconPad` and `StatusChip`.
+
+The splash is `lib/features/splash/`, held by `splashDoneProvider` until the
+profile re-check has had a moment; the router keeps every route behind that
+flag, so a cold start never flashes login at a caller who is signed in. The
+Android window before the first Flutter frame is
+`res/drawable*/launch_background`, the launcher icon is the mark on white in
+`res/mipmap-*` and `ios/.../AppIcon.appiconset` — all generated from
+`assets/images/`, so regenerate by hand if the artwork moves.
+
+`test/golden/*.png` are rendered screens for review; they substitute Roboto
+for Poppins because google_fonts cannot fetch a typeface offline in a test.
 
 ## Before release
 

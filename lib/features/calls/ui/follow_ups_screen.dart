@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../core/app_theme.dart';
 import '../../../core/state/providers.dart';
 import '../../../core/widgets/app_feedback.dart';
+import '../../../core/widgets/brand.dart';
 import '../domain/call_log.dart';
 import '../state/calls_controller.dart';
 
@@ -19,8 +20,9 @@ class FollowUpsScreen extends ConsumerWidget {
     final followUps = ref.watch(followUpsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Call backs'),
+      appBar: BrandAppBar(
+        title: 'Call backs',
+        subtitle: dueOnly ? 'Due now' : 'Everything still promised',
         actions: [
           TextButton(
             onPressed: () =>
@@ -62,9 +64,8 @@ class FollowUpsScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
               itemCount: page.items.length,
               separatorBuilder: (_, _) => const SizedBox(height: 10),
-              itemBuilder: (context, index) => _FollowUpTile(
-                call: page.items[index],
-              ),
+              itemBuilder: (context, index) =>
+                  _FollowUpTile(call: page.items[index]),
             );
           },
         ),
@@ -102,7 +103,7 @@ class _FollowUpTileState extends ConsumerState<_FollowUpTile> {
     final ok = await ref.read(dialerProvider).call(widget.call.personMobile);
 
     if (!ok && mounted) {
-      showNotice(context, 'No number for this person.', isError: true);
+      showNotice(context, 'No number for this client.', isError: true);
     }
   }
 
@@ -119,45 +120,43 @@ class _FollowUpTileState extends ConsumerState<_FollowUpTile> {
           children: [
             Row(
               children: [
+                IconPad(
+                  icon: Icons.event_repeat,
+                  // Overdue is the whole point of this screen, so the row
+                  // changes hue rather than only gaining a word.
+                  colour: due ? AppTheme.warning : AppTheme.tileTeal,
+                  size: 38,
+                ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    call.personName ?? 'Unknown person',
+                    call.personName ?? 'Unknown client',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 if (due)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: AppTheme.warning.withValues(alpha: 0.14),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      'Due',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.warning,
-                      ),
-                    ),
-                  ),
+                  const StatusChip(label: 'Due', colour: AppTheme.warning),
               ],
             ),
             const SizedBox(height: 6),
             Row(
               children: [
-                const Icon(Icons.event_repeat,
-                    size: 14, color: AppTheme.textSecondary),
+                const Icon(
+                  Icons.event_repeat,
+                  size: 14,
+                  color: AppTheme.textSecondary,
+                ),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
                     call.followUpAt == null
                         ? '—'
                         : DateFormat('EEE d MMM, h:mm a')
-                            .format(call.followUpAt!.toLocal()),
+                              .format(call.followUpAt!.toLocal()),
                     style: const TextStyle(
-                        color: AppTheme.textSecondary, fontSize: 12),
+                      color: AppTheme.textSecondary,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],

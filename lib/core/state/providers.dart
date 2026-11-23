@@ -14,6 +14,18 @@ final tokenStoreProvider = Provider<TokenStore>(
   (ref) => throw UnimplementedError('overridden in main()'),
 );
 
+/// False until the splash screen has had its moment. The router holds every
+/// route behind it, so the app opens on the logo instead of flashing the
+/// login screen at a caller who is in fact signed in.
+class SplashGate extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void done() => state = true;
+}
+
+final splashDoneProvider = NotifierProvider<SplashGate, bool>(SplashGate.new);
+
 /// Set when the server rejects a token for good — expired, account switched
 /// off, role moved. The router watches this and drops to the login screen,
 /// and the login screen shows the reason once.
@@ -26,8 +38,9 @@ class SessionEnded extends Notifier<String?> {
   void clear() => state = null;
 }
 
-final sessionEndedProvider =
-    NotifierProvider<SessionEnded, String?>(SessionEnded.new);
+final sessionEndedProvider = NotifierProvider<SessionEnded, String?>(
+  SessionEnded.new,
+);
 
 final apiClientProvider = Provider<ApiClient>((ref) {
   return ApiClient(

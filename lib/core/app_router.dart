@@ -10,21 +10,31 @@ import '../features/messages/ui/sent_screen.dart';
 import '../features/persons/ui/queue_screen.dart';
 import '../features/profile/ui/profile_screen.dart';
 import '../features/shell/ui/app_shell.dart';
+import '../features/splash/ui/splash_screen.dart';
+import 'state/providers.dart';
 
 final _rootKey = GlobalKey<NavigatorState>();
 
-/// Routes, with one redirect: no token means login, and a token means
-/// anywhere but login. The redirect reads a synchronous provider rather than
-/// hitting disk, so it cannot flicker.
+/// Routes, with one redirect: the splash holds the app until the session is
+/// settled, then no token means login and a token means anywhere but login.
+/// The redirect reads synchronous providers rather than hitting disk, so it
+/// cannot flicker.
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootKey,
-    initialLocation: '/',
+    initialLocation: '/splash',
     refreshListenable: _AuthListenable(ref),
     redirect: (context, state) {
+      final atSplash = state.matchedLocation == '/splash';
+
+      // Nothing is reachable until the splash releases, so a cold start
+      // cannot show login for a frame and then replace it.
+      if (!ref.read(splashDoneProvider)) return atSplash ? null : '/splash';
+
       final signedIn = ref.read(isSignedInProvider);
       final atLogin = state.matchedLocation == '/login';
 
+      if (atSplash) return signedIn ? '/' : '/login';
       if (!signedIn) return atLogin ? null : '/login';
       if (atLogin) return '/';
 
@@ -32,9 +42,10 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
       ),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),
@@ -87,5 +98,6 @@ final routerProvider = Provider<GoRouter>((ref) {
 class _AuthListenable extends ChangeNotifier {
   _AuthListenable(Ref ref) {
     ref.listen(isSignedInProvider, (_, _) => notifyListeners());
+    ref.listen(splashDoneProvider, (_, _) => notifyListeners());
   }
 }

@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../core/app_theme.dart';
 import '../../../core/widgets/app_feedback.dart';
+import '../../../core/widgets/brand.dart';
 import '../domain/call_log.dart';
 import '../state/calls_controller.dart';
 
@@ -18,8 +19,9 @@ class HistoryScreen extends ConsumerWidget {
     final history = ref.watch(callHistoryProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My calls'),
+      appBar: BrandAppBar(
+        title: 'My calls',
+        subtitle: 'Everything you have logged',
         actions: [
           IconButton(
             tooltip: 'Profile',
@@ -37,8 +39,7 @@ class HistoryScreen extends ConsumerWidget {
               SizedBox(height: MediaQuery.sizeOf(context).height * 0.25),
               ErrorPanel(
                 error: error,
-                onRetry: () =>
-                    ref.read(callHistoryProvider.notifier).reload(),
+                onRetry: () => ref.read(callHistoryProvider.notifier).reload(),
               ),
             ],
           ),
@@ -77,12 +78,22 @@ class _HistoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // One hue per outcome, used for the row's icon and its chip together,
+    // so a long history can be read by colour before it is read by word.
     final colour = switch (call.status?.value) {
       'converted' => AppTheme.success,
-      'interested' => AppTheme.primary,
+      'interested' => AppTheme.teal,
       'callback' => AppTheme.warning,
       'not_interested' => AppTheme.danger,
       _ => AppTheme.textSecondary,
+    };
+
+    final icon = switch (call.status?.value) {
+      'converted' => Icons.verified_outlined,
+      'interested' => Icons.thumb_up_outlined,
+      'callback' => Icons.event_repeat_outlined,
+      'not_interested' => Icons.thumb_down_outlined,
+      _ => Icons.phone_missed_outlined,
     };
 
     return Card(
@@ -93,28 +104,15 @@ class _HistoryTile extends StatelessWidget {
           children: [
             Row(
               children: [
+                IconPad(icon: icon, colour: colour, size: 38),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    call.personName ?? 'Unknown person',
+                    call.personName ?? 'Unknown client',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: colour.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    call.statusLabel,
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: colour,
-                    ),
-                  ),
-                ),
+                StatusChip(label: call.statusLabel, colour: colour),
               ],
             ),
             const SizedBox(height: 6),
@@ -127,7 +125,9 @@ class _HistoryTile extends StatelessWidget {
                     DateFormat('d MMM y, h:mm a')
                         .format(call.calledAt!.toLocal()),
                     style: const TextStyle(
-                        color: AppTheme.textSecondary, fontSize: 12),
+                      color: AppTheme.textSecondary,
+                      fontSize: 12,
+                    ),
                   ),
                 if (call.followUpOpen && call.followUpAt != null)
                   Text(
@@ -140,9 +140,10 @@ class _HistoryTile extends StatelessWidget {
                     ),
                   ),
                 if (call.followUpDoneAt != null)
-                  const Text('call back closed',
-                      style: TextStyle(
-                          color: AppTheme.success, fontSize: 12)),
+                  const Text(
+                    'call back closed',
+                    style: TextStyle(color: AppTheme.success, fontSize: 12),
+                  ),
               ],
             ),
             if ((call.notes ?? '').isNotEmpty) ...[

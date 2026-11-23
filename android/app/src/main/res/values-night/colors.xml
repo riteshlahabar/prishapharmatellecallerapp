@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark mode gets the same pale ground: the artwork is drawn for a
+         light background and is unreadable on a dark one. -->
+    <color name="splash_background">#E9F5F0</color>
+</resources>

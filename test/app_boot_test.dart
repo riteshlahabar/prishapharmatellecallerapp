@@ -5,6 +5,7 @@ import 'package:telecaller_app/app.dart';
 import 'package:telecaller_app/core/api/token_store.dart';
 import 'package:telecaller_app/core/state/providers.dart';
 import 'package:telecaller_app/features/auth/ui/login_screen.dart';
+import 'package:telecaller_app/features/splash/ui/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Boots the real [App] — router, theme and every screen behind it.
@@ -32,6 +33,11 @@ void main() {
   testWidgets('with no token the app opens on login', (tester) async {
     await pumpApp(tester);
 
+    // The splash holds every route for a beat, so login arrives after it.
+    expect(find.byType(SplashScreen), findsOneWidget);
+    await tester.pump(SplashScreen.minimumHold);
+    await tester.pumpAndSettle();
+
     expect(find.byType(LoginScreen), findsOneWidget);
     expect(find.text('Sign in'), findsWidgets);
     expect(find.text('Prisha Pharma Telecaller'), findsOneWidget);
@@ -40,6 +46,8 @@ void main() {
   testWidgets('login refuses an empty form before calling the server',
       (tester) async {
     await pumpApp(tester);
+    await tester.pump(SplashScreen.minimumHold);
+    await tester.pumpAndSettle();
 
     await tester.tap(find.widgetWithText(FilledButton, 'Sign in'));
     await tester.pump();

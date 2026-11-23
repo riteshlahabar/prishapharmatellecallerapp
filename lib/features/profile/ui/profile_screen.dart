@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/app_theme.dart';
 import '../../../core/constants.dart';
+import '../../../core/widgets/brand.dart';
 import '../../auth/state/auth_controller.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -13,78 +15,88 @@ class ProfileScreen extends ConsumerWidget {
     final user = ref.watch(authControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      // No app bar: BrandHeader below is this screen's header, and two of
+      // them stack into a double title. This screen is pushed over the tabs,
+      // so the header carries the way back.
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.zero,
         children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 32,
-                    backgroundColor: AppTheme.primary,
-                    child: Text(
-                      user?.initials ?? '?',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(user?.name ?? '—',
-                      style: Theme.of(context).textTheme.titleLarge),
-                  Text(
-                    user?.email ?? '',
-                    style: const TextStyle(color: AppTheme.textSecondary),
-                  ),
-                ],
+          BrandHeader(
+            onBack: () => context.pop(),
+            title: user?.name ?? '—',
+            subtitle: user?.email ?? '',
+            trailing: Container(
+              width: 58,
+              height: 58,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppTheme.tint(AppTheme.teal)),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                user?.initials ?? '?',
+                style: const TextStyle(
+                  color: AppTheme.teal,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 14),
-          Card(
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                _Row(
-                  icon: Icons.badge_outlined,
-                  label: 'Role',
-                  value: user?.role.toUpperCase() ?? '—',
+                Card(
+                  child: Column(
+                    children: [
+                      _Row(
+                        icon: Icons.badge_outlined,
+                        label: 'Role',
+                        value: user?.role.toUpperCase() ?? '—',
+                        colour: AppTheme.tileTeal,
+                      ),
+                      const Divider(height: 1),
+                      _Row(
+                        icon: Icons.map_outlined,
+                        label: 'Region',
+                        value: user?.regionLabel ?? '—',
+                        colour: AppTheme.tileGreen,
+                      ),
+                      const Divider(height: 1),
+                      _Row(
+                        icon: Icons.phone_outlined,
+                        label: 'Mobile',
+                        value: user?.mobile ?? '—',
+                        colour: AppTheme.tileBlue,
+                      ),
+                    ],
+                  ),
                 ),
-                const Divider(height: 1),
-                _Row(
-                  icon: Icons.map_outlined,
-                  label: 'Region',
-                  value: user?.regionLabel ?? '—',
+                const SizedBox(height: 20),
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppTheme.danger,
+                    side: const BorderSide(color: AppTheme.danger, width: 1.4),
+                  ),
+                  onPressed: () => _confirmSignOut(context, ref),
+                  icon: const Icon(Icons.logout),
+                  label: const Text('Sign out'),
                 ),
-                const Divider(height: 1),
-                _Row(
-                  icon: Icons.phone_outlined,
-                  label: 'Mobile',
-                  value: user?.mobile ?? '—',
+                const SizedBox(height: 16),
+                Center(
+                  child: Text(
+                    '${AppConstants.appName} · v1.0.0',
+                    style: const TextStyle(
+                      color: AppTheme.textSecondary,
+                      fontSize: 11,
+                    ),
+                  ),
                 ),
+                const SizedBox(height: 24),
               ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          OutlinedButton.icon(
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppTheme.danger,
-              side: const BorderSide(color: AppTheme.danger, width: 1.4),
-            ),
-            onPressed: () => _confirmSignOut(context, ref),
-            icon: const Icon(Icons.logout),
-            label: const Text('Sign out'),
-          ),
-          const SizedBox(height: 16),
-          Center(
-            child: Text(
-              '${AppConstants.appName} · v1.0.0',
-              style: const TextStyle(
-                  color: AppTheme.textSecondary, fontSize: 11),
             ),
           ),
         ],
@@ -118,16 +130,22 @@ class ProfileScreen extends ConsumerWidget {
 }
 
 class _Row extends StatelessWidget {
-  const _Row({required this.icon, required this.label, required this.value});
+  const _Row({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.colour,
+  });
 
   final IconData icon;
   final String label;
   final String value;
+  final Color colour;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, color: AppTheme.textSecondary),
+      leading: IconPad(icon: icon, colour: colour, size: 36),
       title: Text(label, style: const TextStyle(fontSize: 13)),
       trailing: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 190),

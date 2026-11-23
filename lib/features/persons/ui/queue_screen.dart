@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../core/app_theme.dart';
 import '../../../core/state/providers.dart';
 import '../../../core/widgets/app_feedback.dart';
+import '../../../core/widgets/brand.dart';
 import '../../calls/domain/call_log.dart';
 import '../../calls/ui/log_call_sheet.dart';
 import '../domain/person.dart';
@@ -41,7 +42,10 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
     final queue = ref.watch(queueProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Queue')),
+      appBar: const BrandAppBar(
+        title: 'Queue',
+        subtitle: 'Clients in the regions you cover',
+      ),
       body: Column(
         children: [
           Padding(
@@ -87,7 +91,8 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
                     return ListView(
                       children: [
                         SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.18),
+                          height: MediaQuery.sizeOf(context).height * 0.18,
+                        ),
                         EmptyPanel(
                           icon: Icons.people_outline,
                           title: _search.text.isEmpty
@@ -147,17 +152,31 @@ class _QueueTile extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                IconPad(
+                  icon: person.hasDueFollowUp
+                      ? Icons.event_repeat
+                      : Icons.person_outline,
+                  colour: person.hasDueFollowUp
+                      ? AppTheme.tileAmber
+                      : AppTheme.tileTeal,
+                  size: 38,
+                ),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(person.name,
-                          style: Theme.of(context).textTheme.titleMedium),
+                      Text(
+                        person.name,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                       const SizedBox(height: 2),
                       Text(
                         person.subtitle,
                         style: const TextStyle(
-                            color: AppTheme.textSecondary, fontSize: 12),
+                          color: AppTheme.textSecondary,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
@@ -176,6 +195,9 @@ class _QueueTile extends StatelessWidget {
                 Expanded(
                   child: TextButton.icon(
                     onPressed: person.canDial ? onDial : null,
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppTheme.success,
+                    ),
                     icon: const Icon(Icons.call, size: 18),
                     label: Text(person.canDial ? 'Call' : 'No number'),
                   ),
@@ -183,6 +205,7 @@ class _QueueTile extends StatelessWidget {
                 Expanded(
                   child: TextButton.icon(
                     onPressed: onLog,
+                    style: TextButton.styleFrom(foregroundColor: AppTheme.teal),
                     icon: const Icon(Icons.edit_note, size: 20),
                     label: const Text('Log'),
                   ),
@@ -221,14 +244,15 @@ class _LastCall extends StatelessWidget {
         if (last.calledAt != null)
           Text(
             DateFormat('d MMM, h:mm a').format(last.calledAt!.toLocal()),
-            style: const TextStyle(
-                color: AppTheme.textSecondary, fontSize: 12),
+            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
           ),
         if (last.followUpOpen && last.followUpAt != null)
           Text(
             'call back ${DateFormat('d MMM').format(last.followUpAt!.toLocal())}',
             style: TextStyle(
-              color: last.followUpDue ? AppTheme.warning : AppTheme.textSecondary,
+              color: last.followUpDue
+                  ? AppTheme.warning
+                  : AppTheme.textSecondary,
               fontSize: 12,
               fontWeight: last.followUpDue ? FontWeight.w600 : FontWeight.w400,
             ),
@@ -238,12 +262,12 @@ class _LastCall extends StatelessWidget {
   }
 
   Color _statusColour(CallLog call) => switch (call.status?.value) {
-        'converted' => AppTheme.success,
-        'interested' => AppTheme.primary,
-        'callback' => AppTheme.warning,
-        'not_interested' => AppTheme.danger,
-        _ => AppTheme.textSecondary,
-      };
+    'converted' => AppTheme.success,
+    'interested' => AppTheme.primary,
+    'callback' => AppTheme.warning,
+    'not_interested' => AppTheme.danger,
+    _ => AppTheme.textSecondary,
+  };
 }
 
 class _Pill extends StatelessWidget {
@@ -263,7 +287,10 @@ class _Pill extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-            fontSize: 11, fontWeight: FontWeight.w600, color: colour),
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: colour,
+        ),
       ),
     );
   }
