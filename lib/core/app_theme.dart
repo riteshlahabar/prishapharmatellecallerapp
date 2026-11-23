@@ -16,6 +16,11 @@ import 'package:material_ui/material_ui.dart';
 class AppTheme {
   AppTheme._();
 
+  /// One poppins style, purely to name — and load — the family. See the
+  /// note on `textTheme` below for why the whole text theme cannot come
+  /// from google_fonts on the pinned toolchain.
+  static final TextStyle _poppins = GoogleFonts.poppins();
+
   // --- Brand ---------------------------------------------------------------
 
   /// The logo's teal. Headers, primary actions, selected state.
@@ -108,8 +113,16 @@ class AppTheme {
     );
 
     return base.copyWith(
-      textTheme: GoogleFonts.poppinsTextTheme(base.textTheme)
-          .apply(bodyColor: textPrimary, displayColor: textPrimary),
+      // google_fonts 8.x still speaks the SDK's Material TextTheme, so
+      // poppinsTextTheme() can neither read nor return material_ui's. Take
+      // the family off one poppins TextStyle instead — calling it is what
+      // registers the font — and apply it to material_ui's own text theme.
+      textTheme: base.textTheme.apply(
+        fontFamily: _poppins.fontFamily,
+        fontFamilyFallback: _poppins.fontFamilyFallback,
+        bodyColor: textPrimary,
+        displayColor: textPrimary,
+      ),
       // Brand colour on a pale ground: BrandAppBar paints the gradient over
       // this, and a plain AppBar still comes out branded rather than grey.
       appBarTheme: AppBarTheme(

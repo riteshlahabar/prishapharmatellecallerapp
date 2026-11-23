@@ -13,7 +13,7 @@ class AppConstants {
   ///   flutter run --dart-define=API_BASE_URL=https://crm.example.com/api/v1
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:8000/api/v1',
+    defaultValue: 'https://prishapharmacrm.turnkeyinfotech.live/api/v1',
   );
 
   /// Sent on login so the server refuses an MR's account here rather than

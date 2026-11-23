@@ -5,8 +5,8 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  # material_ui 1.11.x needs ^3.13.0; the toolchain here is Dart 3.14.
-  sdk: ^3.13.0
+  # Pinned to the Dart the installed Flutter ships (3.44.4 / Dart 3.12.2).
+  sdk: ^3.12.2
 
 dependencies:
   flutter:
@@ -16,11 +16,17 @@ dependencies:
 
   # Material moved out of the SDK: package:flutter/material.dart is
   # deprecated after Flutter v3.47.0-0.0.pre in favour of this package, which
-  # defines its own TextTheme/ThemeData — NOT re-exports of the SDK's. Mixing
+  # defines its own TextTheme/ThemeData - NOT re-exports of the SDK's. Mixing
   # the two gives "TextTheme can't be assigned to TextTheme". So everything
-  # in lib/ imports material_ui, and every UI dependency below is on a
-  # version that has already migrated. Do not downgrade one without checking.
-  material_ui: ^1.11.1
+  # in lib/ imports material_ui.
+  #
+  # Held at 1.2.0, and google_fonts at 8.x, because the installed Flutter is
+  # 3.44.4 (Dart 3.12.2): material_ui 1.4.0+ and google_fonts 9 both require
+  # Dart ^3.13.0, and 1.3.0 is retracted on pub. google_fonts 8.x has not
+  # migrated, so it cannot hand material_ui a TextTheme - see the note in
+  # lib/core/app_theme.dart. Upgrading Flutter to a Dart >=3.13 toolchain is
+  # what unpins all of this; raise both together when that happens.
+  material_ui: ^1.2.0
 
   # Riverpod, as in the MR app — the ProKit design ships MobX, and we take
   # that kit's look, not its state layer.
@@ -29,8 +35,8 @@ dependencies:
   go_router: ^18.1.4
   dio: ^5.11.1
   shared_preferences: ^2.5.6
-  google_fonts: ^9.0.0
-  intl: ^0.20.3
+  google_fonts: ^8.2.1
+  intl: ^0.20.2
 
   # A telecaller's queue is only a queue if a row can be dialled.
   url_launcher: ^6.3.1
