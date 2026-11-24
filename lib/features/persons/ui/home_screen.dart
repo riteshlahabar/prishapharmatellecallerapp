@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -11,16 +12,16 @@ import '../../calls/ui/log_call_sheet.dart';
 import '../domain/person.dart';
 import '../state/persons_controller.dart';
 
-/// The queue: everyone in this telecaller's regions, with what happened last
+/// Home: everyone in this telecaller's regions, with what happened last
 /// time they rang. Tapping a row dials; the button logs the outcome.
-class QueueScreen extends ConsumerStatefulWidget {
-  const QueueScreen({super.key});
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  ConsumerState<QueueScreen> createState() => _QueueScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _QueueScreenState extends ConsumerState<QueueScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _search = TextEditingController();
 
   @override
@@ -42,9 +43,16 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
     final queue = ref.watch(queueProvider);
 
     return Scaffold(
-      appBar: const BrandAppBar(
-        title: 'Queue',
+      appBar: BrandAppBar(
+        title: 'Home',
         subtitle: 'Clients in the regions you cover',
+        actions: [
+          IconButton(
+            tooltip: 'Profile',
+            onPressed: () => context.push('/profile'),
+            icon: const Icon(Icons.person_outline),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -113,7 +121,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
                     itemBuilder: (context, index) {
                       final person = page.items[index];
 
-                      return _QueueTile(
+                      return _HomeTile(
                         person: person,
                         onDial: () => _dial(person),
                         onLog: () => showLogCallSheet(context, person: person),
@@ -130,8 +138,8 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
   }
 }
 
-class _QueueTile extends StatelessWidget {
-  const _QueueTile({
+class _HomeTile extends StatelessWidget {
+  const _HomeTile({
     required this.person,
     required this.onDial,
     required this.onLog,

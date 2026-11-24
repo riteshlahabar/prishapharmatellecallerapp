@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -19,16 +18,9 @@ class HistoryScreen extends ConsumerWidget {
     final history = ref.watch(callHistoryProvider);
 
     return Scaffold(
-      appBar: BrandAppBar(
+      appBar: const BrandAppBar(
         title: 'My calls',
         subtitle: 'Everything you have logged',
-        actions: [
-          IconButton(
-            tooltip: 'Profile',
-            onPressed: () => context.push('/profile'),
-            icon: const Icon(Icons.person_outline),
-          ),
-        ],
       ),
       body: RefreshIndicator(
         onRefresh: () => ref.read(callHistoryProvider.notifier).reload(),
@@ -51,7 +43,7 @@ class HistoryScreen extends ConsumerWidget {
                   const EmptyPanel(
                     icon: Icons.history,
                     title: 'No calls logged',
-                    message: 'Calls you log from the queue appear here.',
+                    message: 'Calls you log from Home appear here.',
                   ),
                 ],
               );

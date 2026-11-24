@@ -7,7 +7,7 @@ import '../features/auth/ui/login_screen.dart';
 import '../features/calls/ui/follow_ups_screen.dart';
 import '../features/calls/ui/history_screen.dart';
 import '../features/messages/ui/sent_screen.dart';
-import '../features/persons/ui/queue_screen.dart';
+import '../features/persons/ui/home_screen.dart';
 import '../features/profile/ui/profile_screen.dart';
 import '../features/shell/ui/app_shell.dart';
 import '../features/splash/ui/splash_screen.dart';
@@ -54,7 +54,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/',
-                builder: (context, state) => const QueueScreen(),
+                builder: (context, state) => const HomeScreen(),
               ),
             ],
           ),
