@@ -46,6 +46,16 @@ class AppConstants {
   /// plus the MR assigned to a named person.
   static const String recipients = '/mrs';
 
+  /// The Add Client form's two pickers. `client-types` is the panel's own
+  /// master, so a kind added there is offered here with no release.
+  ///
+  /// `assignees/mrs` is a different list from [recipients] above: every
+  /// active MR, not only those covering this telecaller's regions, because
+  /// assigning a client crosses territories by design
+  /// (docs/api/v1-telecaller.md).
+  static const String clientTypes = '/client-types';
+  static const String assignableMrs = '/assignees/mrs';
+
   static const Duration connectTimeout = Duration(seconds: 20);
   static const Duration receiveTimeout = Duration(seconds: 20);
 
