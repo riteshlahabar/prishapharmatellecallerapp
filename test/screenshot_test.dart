@@ -22,7 +22,7 @@ import 'package:telecaller_app/features/messages/state/messages_controller.dart'
 import 'package:telecaller_app/features/messages/ui/sent_screen.dart';
 import 'package:telecaller_app/features/persons/domain/person.dart';
 import 'package:telecaller_app/features/persons/state/persons_controller.dart';
-import 'package:telecaller_app/features/persons/ui/queue_screen.dart';
+import 'package:telecaller_app/features/persons/ui/home_screen.dart';
 
 /// Renders each screen to a PNG for human review of the ProKit styling.
 /// Run: flutter test test/screenshot_test.dart --update-goldens
@@ -296,7 +296,7 @@ void main() {
           queueProvider.overrideWith((ref) async => _queue),
           followUpsProvider.overrideWith((ref) async => Paginated.empty()),
         ],
-        child: MaterialApp(theme: reviewTheme, home: const QueueScreen()),
+        child: MaterialApp(theme: reviewTheme, home: const HomeScreen()),
       ),
     );
   });

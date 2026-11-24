@@ -7,44 +7,35 @@ import '../features/auth/ui/login_screen.dart';
 import '../features/calls/ui/follow_ups_screen.dart';
 import '../features/calls/ui/history_screen.dart';
 import '../features/messages/ui/sent_screen.dart';
-import '../features/persons/ui/queue_screen.dart';
+import '../features/persons/ui/client_form_screen.dart';
+import '../features/persons/ui/home_screen.dart';
+import '../features/persons/ui/my_clients_screen.dart';
 import '../features/profile/ui/profile_screen.dart';
 import '../features/shell/ui/app_shell.dart';
-import '../features/splash/ui/splash_screen.dart';
-import 'state/providers.dart';
 
 final _rootKey = GlobalKey<NavigatorState>();
 
-/// Routes, with one redirect: the splash holds the app until the session is
-/// settled, then no token means login and a token means anywhere but login.
+/// Routes, with one redirect: no token means login, a token means anywhere
+/// but login. There is no splash route — `main()` holds the first frame
+/// back so the native launch window covers startup, and by the time
+/// anything paints this redirect has already settled on the right screen.
 /// The redirect reads synchronous providers rather than hitting disk, so it
 /// cannot flicker.
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootKey,
-    initialLocation: '/splash',
+    initialLocation: '/',
     refreshListenable: _AuthListenable(ref),
     redirect: (context, state) {
-      final atSplash = state.matchedLocation == '/splash';
-
-      // Nothing is reachable until the splash releases, so a cold start
-      // cannot show login for a frame and then replace it.
-      if (!ref.read(splashDoneProvider)) return atSplash ? null : '/splash';
-
       final signedIn = ref.read(isSignedInProvider);
       final atLogin = state.matchedLocation == '/login';
 
-      if (atSplash) return signedIn ? '/' : '/login';
       if (!signedIn) return atLogin ? null : '/login';
       if (atLogin) return '/';
 
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/splash',
-        builder: (context, state) => const SplashScreen(),
-      ),
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
@@ -54,7 +45,15 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/',
-                builder: (context, state) => const QueueScreen(),
+                builder: (context, state) => const HomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/clients',
+                builder: (context, state) => const MyClientsScreen(),
               ),
             ],
           ),
@@ -90,6 +89,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/profile',
         builder: (context, state) => const ProfileScreen(),
       ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: '/clients/new',
+        builder: (context, state) => const ClientFormScreen(),
+      ),
     ],
   );
 });
@@ -98,6 +102,5 @@ final routerProvider = Provider<GoRouter>((ref) {
 class _AuthListenable extends ChangeNotifier {
   _AuthListenable(Ref ref) {
     ref.listen(isSignedInProvider, (_, _) => notifyListeners());
-    ref.listen(splashDoneProvider, (_, _) => notifyListeners());
   }
 }
