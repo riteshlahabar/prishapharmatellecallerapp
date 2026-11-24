@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/api/api_envelope.dart';
 import '../../../core/state/providers.dart';
 import '../../persons/state/persons_controller.dart';
+import '../../products/domain/product.dart';
 import '../domain/call_log.dart';
 import '../domain/call_status.dart';
 
@@ -32,8 +33,9 @@ class FollowUpsDueOnly extends Notifier<bool> {
   void toggle() => state = !state;
 }
 
-final followUpsDueOnlyProvider =
-    NotifierProvider<FollowUpsDueOnly, bool>(FollowUpsDueOnly.new);
+final followUpsDueOnlyProvider = NotifierProvider<FollowUpsDueOnly, bool>(
+  FollowUpsDueOnly.new,
+);
 
 final followUpsProvider = FutureProvider<Paginated<CallLog>>((ref) {
   final dueOnly = ref.watch(followUpsDueOnlyProvider);
@@ -53,12 +55,16 @@ class CallActions {
     required CallStatus status,
     String? notes,
     DateTime? followUpAt,
+    List<ProductLineInput> products = const [],
   }) async {
-    final call = await _ref.read(callsRepositoryProvider).log(
+    final call = await _ref
+        .read(callsRepositoryProvider)
+        .log(
           personId: personId,
           status: status,
           notes: notes,
           followUpAt: followUpAt,
+          products: products,
         );
 
     _refreshAll();
@@ -67,8 +73,7 @@ class CallActions {
   }
 
   Future<CallLog> completeFollowUp(int id) async {
-    final call =
-        await _ref.read(callsRepositoryProvider).completeFollowUp(id);
+    final call = await _ref.read(callsRepositoryProvider).completeFollowUp(id);
 
     _refreshAll();
 

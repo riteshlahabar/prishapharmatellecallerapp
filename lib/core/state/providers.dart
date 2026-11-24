@@ -4,6 +4,7 @@ import '../../features/auth/data/auth_repository.dart';
 import '../../features/calls/data/calls_repository.dart';
 import '../../features/messages/data/messages_repository.dart';
 import '../../features/persons/data/persons_repository.dart';
+import '../../features/products/data/products_repository.dart';
 import '../api/api_client.dart';
 import '../api/token_store.dart';
 import '../dialer.dart';
@@ -59,6 +60,10 @@ final authRepositoryProvider = Provider<AuthRepository>(
     ref.watch(apiClientProvider),
     ref.watch(tokenStoreProvider),
   ),
+);
+
+final productsRepositoryProvider = Provider<ProductsRepository>(
+  (ref) => ProductsRepository(ref.watch(apiClientProvider)),
 );
 
 final personsRepositoryProvider = Provider<PersonsRepository>(

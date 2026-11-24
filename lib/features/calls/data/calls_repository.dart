@@ -1,6 +1,7 @@
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_envelope.dart';
 import '../../../core/constants.dart';
+import '../../products/domain/product.dart';
 import '../domain/call_log.dart';
 import '../domain/call_status.dart';
 
@@ -20,7 +21,10 @@ class CallsRepository {
 
   /// The call-back queue. `due: true` is what the app opens on — the ones
   /// already due; `due: false` shows everything still promised.
-  Future<Paginated<CallLog>> followUps({bool dueOnly = true, int page = 1}) async {
+  Future<Paginated<CallLog>> followUps({
+    bool dueOnly = true,
+    int page = 1,
+  }) async {
     final envelope = await _api.get(
       AppConstants.followUps,
       query: {
@@ -42,6 +46,7 @@ class CallsRepository {
     required CallStatus status,
     String? notes,
     DateTime? followUpAt,
+    List<ProductLineInput> products = const [],
   }) async {
     final envelope = await _api.post(
       AppConstants.callLogs,
@@ -53,6 +58,10 @@ class CallsRepository {
         // when the status asks for one, or the server answers 422.
         if (status.needsFollowUp && followUpAt != null)
           'follow_up_at': _wire(followUpAt),
+        // Left out entirely when empty: the server reads an absent key as
+        // "no products", and on an amend it means "leave them alone".
+        if (products.isNotEmpty)
+          'products': [for (final line in products) line.toJson()],
       },
     );
 

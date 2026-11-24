@@ -7,6 +7,8 @@ import '../../../core/app_theme.dart';
 import '../../../core/widgets/app_feedback.dart';
 import '../../messages/ui/send_message_sheet.dart';
 import '../../persons/domain/person.dart';
+import '../../products/domain/product.dart';
+import '../../products/ui/product_lines_field.dart';
 import '../domain/call_status.dart';
 import '../state/calls_controller.dart';
 
@@ -33,6 +35,7 @@ class _LogCallSheetState extends ConsumerState<_LogCallSheet> {
   final _notes = TextEditingController();
 
   CallStatus? _status;
+  List<ProductLineInput> _products = const [];
   DateTime? _followUpAt;
   bool _busy = false;
   Map<String, List<String>> _serverErrors = const {};
@@ -87,9 +90,11 @@ class _LogCallSheetState extends ConsumerState<_LogCallSheet> {
     // The server requires a date on `callback` and refuses one otherwise.
     // Catching it here saves a round trip and explains it in place.
     if (status.needsFollowUp && _followUpAt == null) {
-      setState(() => _serverErrors = {
-            'follow_up_at': ['Pick when to call back.'],
-          });
+      setState(
+        () => _serverErrors = {
+          'follow_up_at': ['Pick when to call back.'],
+        },
+      );
 
       return;
     }
@@ -100,10 +105,13 @@ class _LogCallSheetState extends ConsumerState<_LogCallSheet> {
     });
 
     try {
-      final call = await ref.read(callActionsProvider).log(
+      final call = await ref
+          .read(callActionsProvider)
+          .log(
             personId: widget.person.id,
             status: status,
             notes: _notes.text,
+            products: _products,
             followUpAt: _followUpAt,
           );
 
@@ -173,8 +181,10 @@ class _LogCallSheetState extends ConsumerState<_LogCallSheet> {
             ),
             if (_serverErrors['status'] != null) ...[
               const SizedBox(height: 6),
-              Text(_serverErrors['status']!.first,
-                  style: const TextStyle(color: AppTheme.danger, fontSize: 12)),
+              Text(
+                _serverErrors['status']!.first,
+                style: const TextStyle(color: AppTheme.danger, fontSize: 12),
+              ),
             ],
             if (needsDate) ...[
               const SizedBox(height: 14),
@@ -205,7 +215,15 @@ class _LogCallSheetState extends ConsumerState<_LogCallSheet> {
                 errorText: _serverErrors['notes']?.first,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 10),
+            // Below the notes, as on the MR app's visit form: the same
+            // field in both apps.
+            ProductLinesField(
+              subtitle:
+                  'Optional — what you talked through, and how many boxes',
+              onChanged: (lines) => _products = lines,
+            ),
+            const SizedBox(height: 14),
             FilledButton(
               onPressed: _busy ? null : _save,
               child: _busy
@@ -213,7 +231,9 @@ class _LogCallSheetState extends ConsumerState<_LogCallSheet> {
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
-                          strokeWidth: 2, color: Colors.white),
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
                     )
                   : const Text('Save call'),
             ),

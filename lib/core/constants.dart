@@ -34,6 +34,9 @@ class AppConstants {
   /// call *this* telecaller made on that person.
   static const String persons = '/persons';
 
+  /// Shared with the MR app: both fill their product dropdown here.
+  static const String products = '/products';
+
   static const String callLogs = '/call-logs';
   static const String followUps = '/call-logs/follow-ups';
   static String followUpDone(int id) => '/call-logs/$id/follow-up-done';
